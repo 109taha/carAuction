@@ -1,0 +1,97 @@
+POST http://localhost:4000/user/register HTTP/2.0
+Content-Type: application/json
+
+{
+    "first_name": "Fatima",
+    "last_name": "Ayaz",
+    "email": "FatimaAyaz@gmail.com",
+    "phone": "03001234987",
+    "password": "password",
+    "location": "Karachi"
+}
+
+####### User Login
+POST http://localhost:4000/user/login HTTP/2.0
+Content-Type: application/json
+
+{
+    "email": "FatimaAyaz@gmail.com",
+    "password": "password"
+}
+
+####### Refresh the user access token using a valid refresh token
+# Will only work after logging in
+POST http://localhost:4000/user/refresh HTTP/2.0
+
+####### Get all cities
+GET http://localhost:4000/user/cities HTTP/2.0
+
+####### Show a car listing
+GET http://localhost:4000/user/listings/cars/Honda-Civic-2007-j8LsibCOeYyIxLmx HTTP/2.0
+
+####### Show a bike listing
+GET http://localhost:4000/user/listings/bikes/Honda-125-vRuQ7ro6evoH9Mh8 HTTP/2.0
+
+####### Create a car listing
+POST http://localhost:4000/user/listings/cars/new HTTP/2.0
+Content-Type: multipart/form-data boundary=----WebWebKitFormBoundary.89vop3n1qum
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDM0NjU1ODZlZDFkNGYyZDU2NGIwNWUiLCJlbWFpbCI6ImZhdGltYWF5YXpAZ21haWwuY29tIiwiaWF0IjoxNjgxNDg3MzA0LCJleHAiOjE2ODE1NzM3MDR9.j6lNCNSzvWPSjJ4I19y7G2uZSBNmirEAEuNhRW_6aso53Khqutt7ZPeNZeDR1R3b-VEafM1F2wPA4J09Zr4C-29BP9m0R61mUZdBJQTn5oobWqRIPrMbBUTTOC79F-How0b3jv2sQ2wo-jYYzEEsisR8HFMN1jo51WJS1lvQEKwbVRLVMF3FT5_T3i56n9dLdJFw4blSjTskKu6VNFEw4_cSqsX4q0cV-X8ZBDKyzVwztLDeDDg4WDGqSQPk-ZE2QCXtRb1prHJir7flY0-V97vMHqIEY2yeD7Qgx1Sw7J2vJnuA8D0VyvcP6S3a4eDbKTeAD3JcNQZPcEGjUKpx1viAZn6sTt6bDsoxjQy26sQI_sxuDDBJDnwrSQzd2FJNqRUYxkMjwdSBuM7z0kGfqYlqEp61OvM8ivcKckf3BT9tuB-s_exU6Zam7Zd3S3dEK-xlYB9aPPzszkrLiGdb2ep7OOcizK4HwrjnJLC2WB-TX5Oay0Yw3TDIeZkJLn24ziRwQFnWwvafztSstMI_4Hqihj6Xx9dnpT7dEtcOn_ef3MYpOexnBZLOoWBdHPOT_y3VbwImW4ME6pH-qfdxBACb37rf_nB-1rRzsr7xW_rm3jX0JWNvwRt3KgO-R49_lbIMFutd311Z5QDJUZZGGqMbm43uVGW47UWEeKLlCms
+
+{
+    "title": "Honda Civic 2023",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "features": ["643089ca111ec628c303f279"],
+    "location": "64343f3d4fdae13658982fc0",
+    "brand": "6434337c4fdae13658982fbe",
+    "model": "6434342c4fdae13658982fbf",
+    "model_year": 2023,
+    "registration_city": "64343f3d4fdae13658982fc0",
+    "condition": "new",
+    "price": 1000000,
+    "distance_driven": 50000,
+    "fuel_type": "electric",
+    "engine_capacity": 0,
+    "battery_capacity": 0,
+    "transmission_type": "automatic",
+    "assembly": "imported",
+    "images": ["one"]
+}
+
+####### Create a bike listing
+POST http://localhost:4000/user/listings/bikes/new HTTP/2.0
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDM0NjU1ODZlZDFkNGYyZDU2NGIwNWUiLCJlbWFpbCI6ImZhdGltYWF5YXpAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE2ODEyMzA0ODAsImV4cCI6MTY4MTMxNjg4MH0.SrUM9FZwVlCBVC_oTXPRLwhisekjd-1REdVmxQQIjYMzdsoZ0SAAmyW2OlykuDshzKAsVqgCpUlvZNWfmCR1-uF_KkR3izr0xyFT9ljJ-R6nUZuBSxY2GpQBYlBv-pnik0SgqVVaXb52TNhqtfsAI7GznGC62P_NpKms4o97gUaHejiAsUgxT-86NaMlsKo7SiXBRqhNH1NWwLdNjI-pFAv1DE1tM0A-OghgUo-riyRaIyMGWSsYzHoLbXpd4ZMbnOthrf7rvnykJ3Wfx_Z38GDTg3V0IbX83HmJUT2tqth1GBVU6x-WX8-5ILoyMKvkSH50ANd84ENe-5BhsN6WuyrOY6Y0uBgxj2edawfyiANQDr6VpjZUsBPYLwcWQPWqznvfBQ0D35GdyXKg5jUs9JqyFKg-j-2D9vojlQh_d8wPoz0Mh8PzN1Q0o2JdlGgIIyBmkkVsBGMoid0KIUUkXlubTmkqi4vr3Y_JJd0zOLYoNEldu5IaTDP0U_vW75uoJMp4_fGmXCG_EcLsL3gcYXY1lXnJQlBw7p2E_Okk3PmjQ_CtHfOgzKb1ItrRgfkg5s1eOgaxsYCvy4g7vUhRaXzgLklLO4WbhQWw2eP1g1uPk_AKiQ1pUqlRgZgxdJqiwTyFHtVBv3QpWGO3vUrpQxtm74nk0YbdS3OrxiIv9Zc
+
+{
+    "title": "Honda 125",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "features": ["643449b385c95af95c90f6d7"],
+    "location": "64343f3d4fdae13658982fc0",
+    "brand": "6434535f85c95af95c90f6d8",
+    "model": "643458c385c95af95c90f6d9",
+    "model_year": 2023,
+    "registration_city": "64343f3d4fdae13658982fc0",
+    "condition": "new",
+    "price": 1000000,
+    "distance_driven": 10,
+    "engine_type": "2 stroke",
+    "images": [ "one" ]
+}
+
+######## Get car listings by page number 
+GET http://localhost:4000/user/listings/cars/page/1 HTTP/2.0
+
+######## Get bike listings by page number
+GET http://localhost:4000/user/listings/bikes/page/1 HTTP/2.0
+
+####### Get all car brands
+GET http://localhost:4000/user/cars/brands
+
+###### Get all car models by brand
+GET http://localhost:4000/user/cars/6434337c4fdae13658982fbe/models
+
+####### Get all bike brands
+GET http://localhost:4000/user/bikes/brands
+
+###### Get all car models by brand
+GET http://localhost:4000/user/bikes/6434535f85c95af95c90f6d8/models

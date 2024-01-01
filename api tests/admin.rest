@@ -1,0 +1,10 @@
+#######
+POST http://localhost:4000/admin/login HTTP/2.0
+Content-Type: application/json
+
+{
+    "hello": "world!"
+}
+
+#######
+GET http://localhost:4000/user/ HTTP/2.0
