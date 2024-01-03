@@ -207,19 +207,23 @@ router
   );
 
 router.route("/forgotpass").post(userController.forgotPassword);
+
 router.route("/update/:id").put(userController.handleUserUpdate);
 
 router
   .route("/listings/cars/update/:Id")
   .post(upload.array("images", 7), userController.updateCarListing);
-module.exports = router;
 
 router
   .route("/listings/bike/update/:Id")
   .post(upload.array("images", 7), userController.updateBikeListing);
-module.exports = router;
 
 router
   .route("/listings/parts/update/:Id")
   .post(upload.array("images", 7), userController.updatePartListing);
+
+router.route("/new/bike/model").post(userController.createBikeModel);
+
+router.route("/new/car/model").post(userController.createCarModel);
+
 module.exports = router;

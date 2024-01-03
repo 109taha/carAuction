@@ -1,0 +1,19 @@
+const Joi = require("joi");
+const CarBrand = require("../../models/CarBrand");
+
+const validateBrand = async (idValue, helpers) => {
+  const allBrandIds = await CarBrand.getAllBrandIds();
+  const isValid = allBrandIds.includes(idValue);
+  if (!isValid) return helpers.message("Invalid brand");
+  return idValue;
+};
+
+const modelCarSchema = Joi.object({
+  brand: Joi.string()
+    .pattern(/^[a-f\d]{24}$/i)
+    .external(validateBrand),
+
+  name: Joi.string().max(70).required(),
+});
+
+module.exports = modelCarSchema;

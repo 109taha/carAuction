@@ -23,6 +23,8 @@ const AutoPartSubCategory = require("../models/AutoPartSubCategory");
 
 // Joi Schemas
 const userSchema = require("../utils/schemas/userSchema");
+const modelCarSchema = require("../utils/schemas/modelCarSchema");
+const modelBikeSchema = require("../utils/schemas/modelBikeSchema");
 const autoPartSchema = require("../utils/schemas/autoPartSchema");
 const carListingSchema = require("../utils/schemas/carListingSchema");
 const bikeListingSchema = require("../utils/schemas/bikeListingSchema");
@@ -2023,6 +2025,60 @@ module.exports.updatePartListing = async (req, res, next) => {
     res
       .status(200)
       .send({ success: true, message: "Product has been updated" });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+module.exports.createBikeModel = async (req, res, next) => {
+  try {
+    const body = req.body;
+    console.log(body);
+    try {
+      validatedBody = await modelBikeSchema.validateAsync(body, {
+        abortEarly: false,
+      });
+
+      const newModel = new BikeModel({
+        ...validatedBody,
+      });
+      return res
+        .status(200)
+        .send({ success: true, message: "Bike Model Added", data: newModel });
+    } catch (err) {
+      return console.log(err);
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+module.exports.createCarModel = async (req, res, next) => {
+  try {
+    const body = req.body;
+    console.log(body);
+    try {
+      validatedBody = await modelCarSchema.validateAsync(body, {
+        abortEarly: false,
+      });
+
+      const newModel = new CarModel({
+        ...validatedBody,
+      });
+      return res
+        .status(200)
+        .send({ success: true, message: "Bike Model Added", data: newModel });
+    } catch (err) {
+      return console.log(err);
+    }
   } catch (error) {
     return res.status(500).json({
       success: false,
