@@ -224,6 +224,10 @@ router
 
 router.route("/new/bike/model").post(userController.createBikeModel);
 
+router.route("/bike/model/:pageNumber").get(userController.sendBikeModel);
+
 router.route("/new/car/model").post(userController.createCarModel);
+
+router.route("/car/model/:pageNumber").get(userController.sendCarModel);
 
 module.exports = router;

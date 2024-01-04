@@ -2061,6 +2061,34 @@ module.exports.createBikeModel = async (req, res, next) => {
   }
 };
 
+module.exports.sendBikeModel = async (req, res, next) => {
+  try {
+    const pageNumber = Number(req.params.pageNumber);
+    const skipping = (pageNumber - 1) * 20;
+
+    const allModel = await BikeModel.find()
+      .sort({
+        created_on: -1,
+      })
+      .skip(skipping)
+      .limit(20)
+      .populate({
+        path: "CarBrand",
+      });
+
+    return res.json({
+      success: true,
+      data: allModel,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports.createCarModel = async (req, res, next) => {
   try {
     const body = req.body;
@@ -2075,7 +2103,7 @@ module.exports.createCarModel = async (req, res, next) => {
       });
       return res
         .status(200)
-        .send({ success: true, message: "Bike Model Added", data: newModel });
+        .json({ success: true, message: "Bike Model Added", data: newModel });
     } catch (err) {
       return console.log(err);
     }
@@ -2083,6 +2111,34 @@ module.exports.createCarModel = async (req, res, next) => {
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+module.exports.sendCarModel = async (req, res, next) => {
+  try {
+    const pageNumber = Number(req.params.pageNumber);
+    const skipping = (pageNumber - 1) * 20;
+
+    const allModel = await CarModel.find()
+      .sort({
+        created_on: -1,
+      })
+      .skip(skipping)
+      .limit(20)
+      .populate({
+        path: "CarBrand",
+      });
+
+    return res.json({
+      success: true,
+      data: allModel,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
       error: error.message,
     });
   }
