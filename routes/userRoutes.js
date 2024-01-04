@@ -230,4 +230,8 @@ router.route("/new/car/model").post(userController.createCarModel);
 
 router.route("/car/model/:pageNumber").get(userController.sendCarModel);
 
+router.route("/new/car/brand").post(upload.array("images", 7),userController.createCarBrand);
+
+router.route("/new/bike/brand").post(upload.array("images", 7),userController.createBikeBrand);
+
 module.exports = router;

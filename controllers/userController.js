@@ -44,6 +44,7 @@ const BikeFeature = require("../models/BikeFeature");
 // Cloudinary
 const cloudinary = require("../config/cloudinary");
 const { truncate } = require("fs/promises");
+const brandCarSchema = require("../utils/schemas/brandCarSchema");
 
 const USER_REFRESH_PUB_KEY =
   process.env.U_REFRESH_PUB_KEY ||
@@ -2143,3 +2144,147 @@ module.exports.sendCarModel = async (req, res, next) => {
     });
   }
 };
+
+module.exports.createCarBrand = async (req, res, next) => {
+  try {
+    const { body, files } = req;
+ 
+    const imgObjs = [];
+    let validatedBody;
+
+    console.log("Body: ", body);
+    console.log("Files: ", files);
+    try {
+      validatedBody = await brandCarSchema.validateAsync(body, {
+        abortEarly: false,
+      });
+    } catch (err) {
+      return console.log(err);
+    }
+    
+    const name = body.name
+
+    if (!files || files?.length < 1)
+      return res.status(400).json({
+        success: false,
+        message: "You have to upload at least one image to the listing",
+      });
+
+    for (const file of files) {
+      const { path } = file;
+      try {
+        const result = await cloudinary.uploader.upload(path, {
+          folder: "pak-auto",
+        });
+        imgObjs.push({
+          url: result.secure_url,
+          public_id: result.public_id,
+        });
+        fs.unlinkSync(path);
+      } catch (err) {
+        if (imgObjs?.length) {
+          const imgs = imgObjs.map((obj) => obj.public_id);
+          cloudinary.api.delete_resources(imgs);
+        }
+        return console.log(err);
+      }
+    }
+
+    const newListing = new CarBrand({
+      name: name,
+      image: imgObjs[0].url
+    });
+
+    try {
+      await newListing.save();
+      return res.json({
+        success: true,
+        data: newListing,
+        message: "Your car listing was created successfully",
+      });
+    } catch {
+      const imgs = imgObjs.map((obj) => obj.public_id);
+      cloudinary.api.delete_resources(imgs);
+      return console.log(err);
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+module.exports.createBikeBrand = async (req, res, next) => {
+  try {
+    const { body, files } = req;
+ 
+    const imgObjs = [];
+    let validatedBody;
+
+    console.log("Body: ", body);
+    console.log("Files: ", files);
+    try {
+      validatedBody = await brandBikeSchema.validateAsync(body, {
+        abortEarly: false,
+      });
+    } catch (err) {
+      return console.log(err);
+    }
+    
+    const name = body.name
+
+    if (!files || files?.length < 1)
+      return res.status(400).json({
+        success: false,
+        message: "You have to upload at least one image to the listing",
+      });
+
+    for (const file of files) {
+      const { path } = file;
+      try {
+        const result = await cloudinary.uploader.upload(path, {
+          folder: "pak-auto",
+        });
+        imgObjs.push({
+          url: result.secure_url,
+          public_id: result.public_id,
+        });
+        fs.unlinkSync(path);
+      } catch (err) {
+        if (imgObjs?.length) {
+          const imgs = imgObjs.map((obj) => obj.public_id);
+          cloudinary.api.delete_resources(imgs);
+        }
+        return console.log(err);
+      }
+    }
+
+    const newListing = new BikeBrand({
+      name: name,
+      image: imgObjs[0].url
+    });
+
+    try {
+      await newListing.save();
+      return res.json({
+        success: true,
+        data: newListing,
+        message: "Your Bike listing was created successfully",
+      });
+    } catch {
+      const imgs = imgObjs.map((obj) => obj.public_id);
+      cloudinary.api.delete_resources(imgs);
+      return console.log(err);
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+
