@@ -45,6 +45,9 @@ const BikeFeature = require("../models/BikeFeature");
 const cloudinary = require("../config/cloudinary");
 const { truncate } = require("fs/promises");
 const brandCarSchema = require("../utils/schemas/brandCarSchema");
+const brandBikeSchema = require("../utils/schemas/brandBikeSchema");
+const featureBikeSchema = require("../utils/schemas/bikeFeature");
+const featureCarSchema = require("../utils/schemas/carFeature");
 
 const USER_REFRESH_PUB_KEY =
   process.env.U_REFRESH_PUB_KEY ||
@@ -2148,7 +2151,7 @@ module.exports.sendCarModel = async (req, res, next) => {
 module.exports.createCarBrand = async (req, res, next) => {
   try {
     const { body, files } = req;
- 
+
     const imgObjs = [];
     let validatedBody;
 
@@ -2161,8 +2164,15 @@ module.exports.createCarBrand = async (req, res, next) => {
     } catch (err) {
       return console.log(err);
     }
-    
-    const name = body.name
+
+    const name = body.name;
+    const existingListing = await CarBrand.findOne({ name: name });
+    console.log(existingListing);
+    if (existingListing) {
+      return res
+        .status(400)
+        .send({ success: false, message: "This brand is already exist" });
+    }
 
     if (!files || files?.length < 1)
       return res.status(400).json({
@@ -2192,7 +2202,7 @@ module.exports.createCarBrand = async (req, res, next) => {
 
     const newListing = new CarBrand({
       name: name,
-      image: imgObjs[0].url
+      image: imgObjs[0].url,
     });
 
     try {
@@ -2219,7 +2229,7 @@ module.exports.createCarBrand = async (req, res, next) => {
 module.exports.createBikeBrand = async (req, res, next) => {
   try {
     const { body, files } = req;
- 
+
     const imgObjs = [];
     let validatedBody;
 
@@ -2232,8 +2242,15 @@ module.exports.createBikeBrand = async (req, res, next) => {
     } catch (err) {
       return console.log(err);
     }
-    
-    const name = body.name
+
+    const name = body.name;
+    const existingListing = await BikeBrand.findOne({ name: name });
+    console.log(existingListing);
+    if (existingListing) {
+      return res
+        .status(400)
+        .send({ success: false, message: "This brand is already exist" });
+    }
 
     if (!files || files?.length < 1)
       return res.status(400).json({
@@ -2263,7 +2280,7 @@ module.exports.createBikeBrand = async (req, res, next) => {
 
     const newListing = new BikeBrand({
       name: name,
-      image: imgObjs[0].url
+      image: imgObjs[0].url,
     });
 
     try {
@@ -2287,4 +2304,88 @@ module.exports.createBikeBrand = async (req, res, next) => {
   }
 };
 
+module.exports.createBikeFeature = async (req, res, next) => {
+  try {
+    const body = req.body;
 
+    let validatedBody;
+
+    console.log("Body: ", body);
+
+    try {
+      validatedBody = await featureBikeSchema.validateAsync(body, {
+        abortEarly: false,
+      });
+    } catch (err) {
+      return console.log(err);
+    }
+
+    const name = body.name;
+    const existingListing = await BikeFeature.findOne({ name: name });
+    if (existingListing) {
+      return res
+        .status(400)
+        .send({ success: false, message: "This feature is already exist" });
+    }
+
+    const newListing = new BikeFeature({
+      name: name,
+    });
+
+    await newListing.save();
+    return res.json({
+      success: true,
+      data: newListing,
+      message: "Your Bike feature is listed",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+module.exports.createCarFeature = async (req, res, next) => {
+  try {
+    const body = req.body;
+
+    let validatedBody;
+
+    console.log("Body: ", body);
+
+    try {
+      validatedBody = await featureCarSchema.validateAsync(body, {
+        abortEarly: false,
+      });
+    } catch (err) {
+      return console.log(err);
+    }
+
+    const name = body.name;
+    const existingListing = await CarFeature.findOne({ name: name });
+    if (existingListing) {
+      return res
+        .status(400)
+        .send({ success: false, message: "This feature is already exist" });
+    }
+
+    const newListing = new CarFeature({
+      name: name,
+    });
+
+    await newListing.save();
+    return res.json({
+      success: true,
+      data: newListing,
+      message: "Your Car feature is listed",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};

@@ -222,16 +222,52 @@ router
   .route("/listings/parts/update/:Id")
   .post(upload.array("images", 7), userController.updatePartListing);
 
-router.route("/new/bike/model").post(userController.createBikeModel);
+router
+  .route("/new/bike/model")
+  .post(
+    passport.authenticate("admin", { session: false }),
+    userController.createBikeModel
+  );
 
 router.route("/bike/model/:pageNumber").get(userController.sendBikeModel);
 
-router.route("/new/car/model").post(userController.createCarModel);
+router
+  .route("/new/car/model")
+  .post(
+    passport.authenticate("admin", { session: false }),
+    userController.createCarModel
+  );
 
 router.route("/car/model/:pageNumber").get(userController.sendCarModel);
 
-router.route("/new/car/brand").post(upload.array("images", 7),userController.createCarBrand);
+router
+  .route("/new/car/brand")
+  .post(
+    passport.authenticate("admin", { session: false }),
+    upload.array("images", 7),
+    userController.createCarBrand
+  );
 
-router.route("/new/bike/brand").post(upload.array("images", 7),userController.createBikeBrand);
+router
+  .route("/new/bike/brand")
+  .post(
+    passport.authenticate("admin", { session: false }),
+    upload.array("images", 7),
+    userController.createBikeBrand
+  );
+
+router
+  .route("/new/bike/feature")
+  .post(
+    passport.authenticate("admin", { session: false }),
+    userController.createBikeFeature
+  );
+
+router
+  .route("/new/car/feature")
+  .post(
+    passport.authenticate("admin", { session: false }),
+    userController.createCarFeature
+  );
 
 module.exports = router;
