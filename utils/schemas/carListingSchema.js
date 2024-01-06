@@ -63,6 +63,38 @@ const validateBatteryCapacity = (value, helpers) => {
 };
 
 const carListingSchema = Joi.object({
+  type: Joi.string().valid("auction", "normal").required(),
+
+  bidding_starting_price: Joi.when("type", {
+    is: "auction",
+    then: Joi.number().min(0).required(),
+    otherwise: Joi.forbidden(),
+  }),
+
+  bidding_difference: Joi.when("type", {
+    is: "auction",
+    then: Joi.number().min(50).required(),
+    otherwise: Joi.forbidden(),
+  }),
+
+  selling_price: Joi.when("type", {
+    is: "auction",
+    then: Joi.number().min(0).required(),
+    otherwise: Joi.forbidden(),
+  }),
+
+  bidding_starting_date: Joi.when("type", {
+    is: "auction",
+    then: Joi.date().iso().required(),
+    otherwise: Joi.forbidden(),
+  }),
+
+  bidding_ending_date: Joi.when("type", {
+    is: "auction",
+    then: Joi.date().iso().greater(Joi.ref("bidding_starting_date")).required(),
+    otherwise: Joi.forbidden(),
+  }),
+
   title: Joi.string().min(3).max(70).required(),
 
   description: Joi.string().min(10).max(1000).required(),
@@ -72,10 +104,7 @@ const carListingSchema = Joi.object({
     .unique()
     .external(validateFeatures),
 
-  location: Joi.string()
-    .pattern(/^[a-f\d]{24}$/i)
-    .required()
-    .external(validateLocation),
+  location: Joi.string().required(),
 
   brand: Joi.string()
     .pattern(/^[a-f\d]{24}$/i)
@@ -89,12 +118,9 @@ const carListingSchema = Joi.object({
 
   model_year: Joi.number().min(1940).max(new Date().getFullYear()).required(),
 
-  registration_city: Joi.string()
-    .pattern(/^[a-f\d]{24}$/i)
-    .required()
-    .external(validateLocation),
+  registration_city: Joi.string().required(),
 
-  condition: Joi.string().valid("new", "used").required(),
+  condition: Joi.string().valid("new", "used", "accidental").required(),
 
   body_color: Joi.string()
     .valid(
@@ -197,12 +223,26 @@ const carListingSchema = Joi.object({
     )
     .required(),
 
-  price: Joi.number().min(0).required(),
+  price: Joi.when("type", {
+    is: "normal",
+    then: Joi.number().min(0).required(),
+    otherwise: Joi.forbidden(),
+  }),
 
   distance_driven: Joi.number().min(0).required(),
 
   fuel_type: Joi.string()
-    .valid("petrol", "diesel", "lpg", "cng", "hybrid", "electric")
+    .valid(
+      "Regular 87 octane gasoline",
+      "Diesel",
+      "Ethanol",
+      "Hydrogen",
+      "Gasoline",
+      "Methanol",
+      "Octane gasoline",
+      "Biodiesel",
+      "Natural gas"
+    )
     .required(),
 
   engine_capacity: Joi.number()

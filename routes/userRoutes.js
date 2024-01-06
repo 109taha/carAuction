@@ -135,7 +135,7 @@ router
   .route("/listings/cars/new")
   .post(
     passport.authenticate("user", { session: false }),
-    upload.array("images", 7),
+    upload.array("images", 15),
     userController.createNewCarListing
   );
 
@@ -239,6 +239,10 @@ router
   );
 
 router.route("/car/model/:pageNumber").get(userController.sendCarModel);
+
+router
+  .route("/car/model/:pageNumber/:brandId")
+  .get(userController.sendCarByBrandModel);
 
 router
   .route("/new/car/brand")

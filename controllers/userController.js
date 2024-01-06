@@ -1342,12 +1342,12 @@ module.exports.getMyOrders = async (req, res, next) => {
 
 module.exports.createNewCarListing = async (req, res, next) => {
   const { user, body, files } = req;
+
   const imgObjs = [];
   let validatedBody;
 
-  console.log("Body: ", body);
-  console.log("Files: ", files);
-
+  // console.log("Body: ", body);
+  // console.log("Files: ", files);
   try {
     validatedBody = await carListingSchema.validateAsync(body, {
       abortEarly: false,
@@ -1387,17 +1387,20 @@ module.exports.createNewCarListing = async (req, res, next) => {
     ...validatedBody,
     images: imgObjs,
   });
+  console.log(newListing);
+  await newListing.save();
+  console.log(123);
+  return res.json({
+    success: true,
+    listingId: newListing.link_id,
+    message: "Your car listing was created successfully",
+  });
+};
+
+module.exports.biddingOnCar = async (req, res) => {
   try {
-    await newListing.save();
-    return res.json({
-      success: true,
-      listingId: newListing.link_id,
-      message: "Your car listing was created successfully",
-    });
-  } catch {
-    const imgs = imgObjs.map((obj) => obj.public_id);
-    cloudinary.api.delete_resources(imgs);
-    return console.log(err);
+  } catch (error) {
+    console.log();
   }
 };
 
@@ -2105,6 +2108,7 @@ module.exports.createCarModel = async (req, res, next) => {
       const newModel = new CarModel({
         ...validatedBody,
       });
+      await newModel.save();
       return res
         .status(200)
         .json({ success: true, message: "Bike Model Added", data: newModel });
@@ -2132,9 +2136,37 @@ module.exports.sendCarModel = async (req, res, next) => {
       .skip(skipping)
       .limit(20)
       .populate({
-        path: "CarBrand",
+        path: "brand",
       });
+    console.log(allModel);
+    return res.json({
+      success: true,
+      data: allModel,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
 
+module.exports.sendCarByBrandModel = async (req, res, next) => {
+  try {
+    const pageNumber = Number(req.params.pageNumber);
+    const skipping = (pageNumber - 1) * 20;
+
+    const allModel = await CarModel.find({ brand: req.params.brandId })
+      .sort({
+        created_on: -1,
+      })
+      .skip(skipping)
+      .limit(20)
+      .populate({
+        path: "brand",
+      });
+    console.log(allModel);
     return res.json({
       success: true,
       data: allModel,

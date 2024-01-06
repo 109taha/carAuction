@@ -10,6 +10,57 @@ const nanoid = customAlphabet(ALPHABET, 16);
 
 const CarListingSchema = new Schema(
   {
+    type: {
+      type: String,
+      require: true,
+      enum: ["auction", "normal"],
+    },
+    bidding_starting_price: {
+      type: Number,
+      min: 0,
+      required: function () {
+        return this.type === "auction";
+      },
+    },
+    current_bidding: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "CarBiddingSchema",
+    },
+    bidding_difference: {
+      type: Number,
+      min: 50,
+      required: function () {
+        return this.type === "auction";
+      },
+    },
+    selling_price: {
+      type: Number,
+      min: 0,
+      required: function () {
+        return this.type === "auction";
+      },
+    },
+    bidding_starting_date: {
+      type: Date,
+      required: function () {
+        return this.type === "auction";
+      },
+    },
+    bidding_ending_date: {
+      type: Date,
+      validate: {
+        validator: function (value) {
+          return (
+            this.type !== "auction" ||
+            (this.bidding_starting_date && value > this.bidding_starting_date)
+          );
+        },
+        message: "Ending date must be greater than starting date",
+      },
+      required: function () {
+        return this.type === "auction";
+      },
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -38,9 +89,7 @@ const CarListingSchema = new Schema(
       ],
     },
     location: {
-      type: Schema.Types.ObjectId,
-      ref: "City",
-      index: true,
+      type: String,
       required: true,
     },
     brand: {
@@ -62,14 +111,12 @@ const CarListingSchema = new Schema(
       max: 2150,
     },
     registration_city: {
-      type: Schema.Types.ObjectId,
-      ref: "City",
-      index: true,
+      type: String,
       required: true,
     },
     condition: {
       type: String,
-      enum: ["new", "used"],
+      enum: ["new", "used", "accidental"],
       trim: true,
       required: true,
     },
@@ -179,7 +226,9 @@ const CarListingSchema = new Schema(
     price: {
       type: Number,
       min: 0,
-      required: true,
+      required: function () {
+        return this.type === "normal";
+      },
     },
     distance_driven: {
       type: Number,
@@ -188,7 +237,17 @@ const CarListingSchema = new Schema(
     },
     fuel_type: {
       type: String,
-      enum: ["petrol", "diesel", "lpg", "cng", "hybrid", "electric"],
+      enum: [
+        "Regular 87 octane gasoline",
+        "Diesel",
+        "Ethanol",
+        "Hydrogen",
+        "Gasoline",
+        "Methanol",
+        "Octane gasoline",
+        "Biodiesel",
+        "Natural gas",
+      ],
       required: true,
     },
     engine_capacity: {
@@ -231,7 +290,7 @@ const CarListingSchema = new Schema(
     status: {
       type: String,
       enum: ["active", "inactive", "awaiting approval"],
-      default: "active",
+      default: "awaiting approval",
       index: true,
     },
   },
@@ -259,10 +318,19 @@ CarListingSchema.pre("validate", async function (next) {
 });
 
 CarListingSchema.pre("validate", async function (next) {
-  const engineVehicles = ["petrol", "diesel", "lpg", "cng", "hybrid"];
+  const engineVehicles = [
+    "Regular 87 octane gasoline",
+    "Diesel",
+    "Ethanol",
+    "Gasoline",
+    "Methanol",
+    "Octane gasoline",
+    "Biodiesel",
+    "Natural gas",
+  ];
   if (
     (engineVehicles.includes(this.fuel_type) && this.engine_capacity === 0) ||
-    (this.fuel_type === "electric" && this.battery_capacity === 0)
+    (this.fuel_type === "Hydrogen" && this.battery_capacity === 0)
   ) {
     return next(new Error("Engine/battery capacity cannot be 0"));
   }
