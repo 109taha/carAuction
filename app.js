@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -24,5 +23,5 @@ app.use("/", allRoutes);
 app.use(expressErrorHandler);
 
 app.listen(PORT, () => {
-    console.log(`Listening at ${PORT}`);
+  console.log(`Listening at ${PORT}`);
 });

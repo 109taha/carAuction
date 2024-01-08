@@ -116,6 +116,10 @@ router
   .get(isValidPageNumber, catchAsync(userController.showNewCarListings));
 
 router
+  .route("/listings/cars/accident/:location/page/:pageNumber")
+  .get(isValidPageNumber, catchAsync(userController.showAccidentCarListings));
+
+router
   .route("/listings/cars/used/:location/page/:pageNumber")
   .get(isValidPageNumber, catchAsync(userController.showUsedCarListings));
 
@@ -137,6 +141,13 @@ router
     passport.authenticate("user", { session: false }),
     upload.array("images", 15),
     userController.createNewCarListing
+  );
+
+router
+  .route("/biding/:carId")
+  .post(
+    passport.authenticate("user", { session: false }),
+    userController.biddingOnCar
   );
 
 router

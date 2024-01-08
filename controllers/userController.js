@@ -48,6 +48,7 @@ const brandCarSchema = require("../utils/schemas/brandCarSchema");
 const brandBikeSchema = require("../utils/schemas/brandBikeSchema");
 const featureBikeSchema = require("../utils/schemas/bikeFeature");
 const featureCarSchema = require("../utils/schemas/carFeature");
+const CarBidding = require("../models/CarBiddingListing");
 
 const USER_REFRESH_PUB_KEY =
   process.env.U_REFRESH_PUB_KEY ||
@@ -527,7 +528,7 @@ module.exports.showCarListingsByBrandModel = async (req, res, next) => {
   const skipping = (pageNumber - 1) * 20;
 
   const listings = await CarListing.find({
-    status: "active",
+    status: "awaiting approval",
     brand: brandId,
     model: modelId,
   })
@@ -674,6 +675,57 @@ module.exports.showUsedCarListings = async (req, res, next) => {
           })
           .populate({
             path: "registration_city",
+          });
+
+  return res.json({
+    success: true,
+    data: listings,
+  });
+};
+
+module.exports.showAccidentCarListings = async (req, res, next) => {
+  s;
+  const pageNumber = Number(req.params.pageNumber);
+  const location = req.params.location;
+  const skipping = (pageNumber - 1) * 20;
+  const listings =
+    location == "all"
+      ? await CarListing.find({
+          status: "active",
+          condition: "accidental",
+        })
+          .sort({
+            created_on: -1,
+          })
+          .skip(skipping)
+          .limit(20)
+          .populate({
+            path: "features",
+          })
+          .populate({
+            path: "brand",
+          })
+          .populate({
+            path: "model",
+          })
+      : await CarListing.find({
+          status: "active",
+          condition: "accidental",
+          location: location,
+        })
+          .sort({
+            created_on: -1,
+          })
+          .skip(skipping)
+          .limit(20)
+          .populate({
+            path: "features",
+          })
+          .populate({
+            path: "brand",
+          })
+          .populate({
+            path: "model",
           });
 
   return res.json({
@@ -1399,6 +1451,30 @@ module.exports.createNewCarListing = async (req, res, next) => {
 
 module.exports.biddingOnCar = async (req, res) => {
   try {
+    const { user } = req;
+    const biddingAmount = req.body.biddingAmount;
+    const carId = req.params.carId;
+
+    if (!biddingAmount) {
+      return res.status(400).send("You have to provide biddingAmount");
+    }
+
+    const car = await CarListing.findById(carId);
+    if (!car) {
+      return res.status(400).send("No Car found on that Id");
+    }
+    if (car.type == "normal") {
+      return res.status(400).send("This Car is not for auction");
+    }
+
+    car.bidding_difference < bidding;
+    const carBidding = new CarBidding({
+      biddingAmount,
+      carId,
+      userId: user,
+    });
+
+    console.log(carBidding);
   } catch (error) {
     console.log();
   }
