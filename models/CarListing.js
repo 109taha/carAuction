@@ -23,8 +23,8 @@ const CarListingSchema = new Schema(
       },
     },
     current_bidding: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "CarBiddingSchema",
+      type: Schema.Types.ObjectId,
+      ref: "CarBidding",
     },
     bidding_difference: {
       type: Number,

@@ -68,13 +68,22 @@ module.exports.handleUserRegistration = async (req, res, next) => {
   const result = userSchema.validate(req.body, {
     abortEarly: false,
   });
+  console.log(result.value.email);
+  const email = result.value.email;
+  const user = await User.findOne({ email });
+  if (user)
+    return res
+      .status(400)
+      .send({ success: false, message: "This email is already used" });
+
   if (result.error) {
     const x = result.error.details.map((error) => error.message);
-    return res.json({
+    return res.status(400).json({
       success: false,
-      message: errors,
+      message: x,
     });
   }
+
   const { hash, salt } = genPasswordAndHash(result.value.password);
   delete result.value.password;
   const userData = {
@@ -1069,7 +1078,7 @@ module.exports.showIndividualCarListing = async (req, res, next) => {
       path: "registration_city",
     });
   if (!foundCarListing)
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: "Invalid listing specified",
     });
@@ -1113,7 +1122,7 @@ module.exports.showIndividualAutoPartListing = async (req, res, next) => {
     });
 
   if (!foundAutoPartListing)
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: "Invalid listing specified",
     });
@@ -1160,7 +1169,7 @@ module.exports.compareIndividualCar = async (req, res, next) => {
       path: "registration_city",
     });
   if (!foundCarListing1)
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: "Invalid listing specified",
     });
@@ -1198,7 +1207,7 @@ module.exports.compareIndividualCar = async (req, res, next) => {
       path: "registration_city",
     });
   if (!foundCarListing2)
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: "Invalid listing specified",
     });
@@ -1245,7 +1254,7 @@ module.exports.showIndividualBikeListing = async (req, res, next) => {
       path: "registration_city",
     });
   if (!foundBikeListing)
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: "Invalid listing specified",
     });
@@ -1291,7 +1300,7 @@ module.exports.compareIndividualBike = async (req, res, next) => {
       path: "registration_city",
     });
   if (!foundBikeListing1)
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: "Invalid listing specified",
     });
@@ -1329,7 +1338,7 @@ module.exports.compareIndividualBike = async (req, res, next) => {
       path: "registration_city",
     });
   if (!foundBikeListing2)
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: "Invalid listing specified",
     });
@@ -1466,14 +1475,47 @@ module.exports.biddingOnCar = async (req, res) => {
     if (car.type == "normal") {
       return res.status(400).send("This Car is not for auction");
     }
-
-    car.bidding_difference < bidding;
+    const BidDiff = car.bidding_difference;
+    const currentAmount = car.current_bidding;
+    console.log(currentAmount);
+    if (currentAmount) {
+      const cars = await CarListing.findById(carId).populate({
+        path: "current_bidding",
+      });
+      const cuurentAmount =
+        cars.current_bidding.biddingAmount + cars.bidding_difference;
+      console.log(cuurentAmount);
+      if (cuurentAmount >= biddingAmount) {
+        return res
+          .status(400)
+          .send(
+            `Bidding amount must be ${BidDiff}$ greater then Current amount `
+          );
+      }
+    }
+    if (BidDiff > biddingAmount) {
+      return res
+        .status(400)
+        .send(
+          "Bidding amount must be greater then or equal to bidding difference"
+        );
+    }
     const carBidding = new CarBidding({
       biddingAmount,
       carId,
       userId: user,
     });
+    await carBidding.save();
 
+    car.current_bidding = carBidding._id;
+
+    await car.save();
+    return res.status(200).send({
+      success: true,
+      message: "You bid has been successfully added",
+      data: carBidding,
+      carDetail: car,
+    });
     console.log(carBidding);
   } catch (error) {
     console.log();
