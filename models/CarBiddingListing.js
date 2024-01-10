@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const CarBiddingSchema = new Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    CarId: { type: Schema.Types.ObjectId, ref: "CarListing" },
+    carId: { type: Schema.Types.ObjectId, ref: "CarListing" },
     biddingAmount: { type: Number, required: true },
   },
   {

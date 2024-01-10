@@ -1525,10 +1525,12 @@ module.exports.biddingOnCar = async (req, res) => {
 module.exports.getCarAllBids = async (req, res) => {
   const carId = req.params.carId;
   const car = await CarListing.findById(carId);
+  console.log(car);
   if (!car) {
     return res.status(400).send("No car found on that id");
   }
-  const bidd = await CarBidding.find({ carId });
+  const bidd = await CarBidding.find({ carId: carId });
+  console.log(bidd);
   if (!bidd.length < 0) {
     return res.status(400).send("No bids found on that Car");
   }
@@ -1537,7 +1539,8 @@ module.exports.getCarAllBids = async (req, res) => {
 
 module.exports.getBidsByUser = async (req, res) => {
   const { user } = req;
-  const bidd = await CarBidding.find({ userID: user._id });
+  console.log(user);
+  const bidd = await CarBidding.find({ userId: user });
   if (!bidd.length < 0) {
     return res.status(400).send("No user bids found ");
   }

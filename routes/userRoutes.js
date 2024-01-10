@@ -285,6 +285,13 @@ router
     userController.createCarFeature
   );
 
-router.route("/get/car/bids").get(userController.getCarAllBids);
-          
+router.route("/get/car/bids/:carId").get(userController.getCarAllBids);
+
+router
+  .route("/get/users/bid")
+  .get(
+    passport.authenticate("user", { session: false }),
+    userController.getBidsByUser
+  );
+
 module.exports = router;
