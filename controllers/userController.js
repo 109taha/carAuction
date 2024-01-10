@@ -1522,6 +1522,28 @@ module.exports.biddingOnCar = async (req, res) => {
   }
 };
 
+module.exports.getCarAllBids = async (req, res) => {
+  const carId = req.params.carId;
+  const car = await CarListing.findById(carId);
+  if (!car) {
+    return res.status(400).send("No car found on that id");
+  }
+  const bidd = await CarBidding.find({ carId });
+  if (!bidd.length < 0) {
+    return res.status(400).send("No bids found on that Car");
+  }
+  return res.status(200).send({ success: true, data: bidd });
+};
+
+module.exports.getBidsByUser = async (req, res) => {
+  const { user } = req;
+  const bidd = await CarBidding.find({ userID: user._id });
+  if (!bidd.length < 0) {
+    return res.status(400).send("No user bids found ");
+  }
+  return res.status(200).send({ success: true, data: bidd });
+};
+
 module.exports.createNewOrder = async (req, res, next) => {
   const { parts, user, address } = req.body;
 

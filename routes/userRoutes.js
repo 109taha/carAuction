@@ -285,4 +285,6 @@ router
     userController.createCarFeature
   );
 
+router.route("/get/car/bids").get(userController.getCarAllBids);
+          
 module.exports = router;
