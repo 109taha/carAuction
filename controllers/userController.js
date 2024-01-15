@@ -1414,7 +1414,12 @@ module.exports.createNewCarListing = async (req, res, next) => {
       abortEarly: false,
     });
   } catch (err) {
-    return console.log(err);
+    console.log(err);
+    const x = err.details.map((error) => error.message);
+    return res.status(400).json({
+      success: false,
+      message: x,
+    });
   }
 
   if (!files || files?.length < 1)
