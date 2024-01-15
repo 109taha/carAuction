@@ -64,6 +64,19 @@ const validateBatteryCapacity = (value, helpers) => {
 
 const carListingSchema = Joi.object({
   type: Joi.string().valid("auction", "normal").required(),
+  carSize: Joi.string()
+    .valid(
+      "PICKUP TRUCK",
+      "MINIVAN",
+      "SPORT-UTILITY VEHICLE (SUV)",
+      "CONVERTIBLE",
+      "HATCHBACK",
+      "STATION WAGON",
+      "SPORTS CAR",
+      "COUPE",
+      "SEDAN"
+    )
+    .required(),
 
   bidding_starting_price: Joi.when("type", {
     is: "auction",

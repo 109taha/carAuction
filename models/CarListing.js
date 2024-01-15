@@ -15,6 +15,21 @@ const CarListingSchema = new Schema(
       require: true,
       enum: ["auction", "normal"],
     },
+    carSize: {
+      type: String,
+      required: true,
+      enum: [
+        "PICKUP TRUCK",
+        "MINIVAN",
+        "SPORT-UTILITY VEHICLE (SUV)",
+        "CONVERTIBLE",
+        "HATCHBACK",
+        "STATION WAGON",
+        "SPORTS CAR",
+        "COUPE",
+        "SEDAN",
+      ],
+    },
     bidding_starting_price: {
       type: Number,
       min: 0,
