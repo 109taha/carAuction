@@ -2656,3 +2656,19 @@ module.exports.sendAllCarSize = async (req, res, next) => {
     data: allBrands,
   });
 };
+
+module.exports.deleteCarListing = async (req, res) => {
+  try {
+    const listingId = req.params.id;
+    await CarListing.findByIdAndDelete(listingId);
+    return res.status(200).send({
+      success: true,
+      message: "Your Add has been deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .send({ success: false, message: "Internal server error " });
+  }
+};

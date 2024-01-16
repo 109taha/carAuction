@@ -65,29 +65,7 @@ const validateBatteryCapacity = (value, helpers) => {
 const carListingSchema = Joi.object({
   type: Joi.string().valid("auction", "normal").required(),
   carSize: Joi.string()
-    .valid(
-      "Compact hatchback",
-      "Compact sedan",
-      "Compact SUV",
-      "Double Cabin",
-      "High Roof",
-      "Micro Van",
-      "Mini Van",
-      "Mini Vehicles",
-      "Off-Road Vehicles",
-      "Pick Up",
-      "Single Cabin",
-      "Station Wagon",
-      "Convertible",
-      "Coupe",
-      "Crossover",
-      "Hatchback",
-      "MPV",
-      "Sedan",
-      "SUV",
-      "Truck",
-      "Van"
-    )
+    .pattern(/^[a-f\d]{24}$/i)
     .required(),
 
   bidding_starting_price: Joi.when("type", {
