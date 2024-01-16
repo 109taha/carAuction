@@ -50,6 +50,7 @@ const featureBikeSchema = require("../utils/schemas/bikeFeature");
 const featureCarSchema = require("../utils/schemas/carFeature");
 const CarBidding = require("../models/CarBiddingListing");
 const CarSize = require("../models/carSize");
+const sizeCarSchema = require("../utils/schemas/carSizeSchema");
 
 const USER_REFRESH_PUB_KEY =
   process.env.U_REFRESH_PUB_KEY ||
@@ -2585,18 +2586,20 @@ module.exports.createCarSize = async (req, res, next) => {
         abortEarly: false,
       });
     } catch (err) {
-      return console.log(err);
+      const x = err.error.details.map((error) => error.message);
+      return res.status(400).json({
+        success: false,
+        message: x,
+      });
     }
 
     const carSize = body.carSize;
     const existingListing = await CarSize.findOne({ carSize: carSize });
-    console.log(existingListing);
     if (existingListing) {
       return res
         .status(400)
         .send({ success: false, message: "This brand is already exist" });
     }
-
     if (!files || files?.length < 1)
       return res.status(400).json({
         success: false,
@@ -2622,12 +2625,11 @@ module.exports.createCarSize = async (req, res, next) => {
         return console.log(err);
       }
     }
-
     const newListing = new CarSize({
       carSize: carSize,
-      image: imgObjs[0].url,
+      images: imgObjs[0].url,
     });
-
+    console.log(newListing);
     try {
       await newListing.save();
       return res.json({
@@ -2670,5 +2672,38 @@ module.exports.deleteCarListing = async (req, res) => {
     return res
       .status(500)
       .send({ success: false, message: "Internal server error " });
+  }
+};
+
+module.exports.savedCars = async (req, res) => {
+  try {
+    const user = req.user;
+    console.log(user);
+    const carId = req.params.id;
+
+    const userFromDB = await User.findById(user);
+    if (!userFromDB) {
+      return res.status(404).send("User not found");
+    }
+    if (userFromDB.savedCars.includes(carId)) {
+      // return res.status(400).send("Blog already saved");
+
+      userFromDB.savedCars = userFromDB.savedCars.filter(
+        (item) => item.toString() != carId
+      );
+
+      await userFromDB.save();
+
+      return res.status(200).send("Blog unsaved successfully");
+    }
+
+    userFromDB.savedCars.push(carId);
+
+    await userFromDB.save();
+
+    return res.status(200).send("Blog saved successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error: " + error.message);
   }
 };

@@ -27,7 +27,7 @@ const CarSizeSchema = new mongoose.Schema({
       "Van",
     ],
   },
-  pic: {
+  images: {
     type: String,
     required: true,
   },

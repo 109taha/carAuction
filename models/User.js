@@ -44,6 +44,12 @@ const UserSchema = new Schema(
       type: String,
       trim: true,
     },
+    savedCars: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CarListing",
+      },
+    ],
   },
   {
     timestamps: {

@@ -303,5 +303,15 @@ router
   );
 
 router.route("/cars/size").get(catchAsync(userController.sendAllCarSize));
+router
+  .route("/delete/car/:id")
+  .delete(catchAsync(userController.deleteCarListing));
+
+router
+  .route("/saved/cars/:id")
+  .get(
+    passport.authenticate("user", { session: false }),
+    userController.savedCars
+  );
 
 module.exports = router;
