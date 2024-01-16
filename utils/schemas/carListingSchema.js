@@ -66,15 +66,27 @@ const carListingSchema = Joi.object({
   type: Joi.string().valid("auction", "normal").required(),
   carSize: Joi.string()
     .valid(
-      "PICKUP TRUCK",
-      "MINIVAN",
-      "SPORT-UTILITY VEHICLE (SUV)",
-      "CONVERTIBLE",
-      "HATCHBACK",
-      "STATION WAGON",
-      "SPORTS CAR",
-      "COUPE",
-      "SEDAN"
+      "Compact hatchback",
+      "Compact sedan",
+      "Compact SUV",
+      "Double Cabin",
+      "High Roof",
+      "Micro Van",
+      "Mini Van",
+      "Mini Vehicles",
+      "Off-Road Vehicles",
+      "Pick Up",
+      "Single Cabin",
+      "Station Wagon",
+      "Convertible",
+      "Coupe",
+      "Crossover",
+      "Hatchback",
+      "MPV",
+      "Sedan",
+      "SUV",
+      "Truck",
+      "Van"
     )
     .required(),
 
