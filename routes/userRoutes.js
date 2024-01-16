@@ -294,4 +294,14 @@ router
     userController.getBidsByUser
   );
 
+router
+  .route("/create/car/size")
+  .post(
+    passport.authenticate("admin", { session: false }),
+    upload.array("images", 7),
+    userController.createCarSize
+  );
+
+router.route("/cars/size").get(catchAsync(userController.sendAllCarSize));
+
 module.exports = router;
