@@ -1049,7 +1049,7 @@ module.exports.showIndividualCarListing = async (req, res, next) => {
   const foundCarListing = await CarListing.findOneAndUpdate(
     {
       link_id,
-      status: "active",
+      // status: "active",
     },
     {
       $inc: {
@@ -1079,6 +1079,7 @@ module.exports.showIndividualCarListing = async (req, res, next) => {
     .populate({
       path: "registration_city",
     });
+  console.log(link_id);
   if (!foundCarListing)
     return res.status(400).json({
       success: false,
