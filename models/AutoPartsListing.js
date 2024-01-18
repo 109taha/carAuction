@@ -63,7 +63,7 @@ const AutoPartListingSchema = new Schema(
     status: {
       type: String,
       enum: ["active", "inactive", "awaiting approval"],
-      default: "active",
+      default: "awaiting approval",
       index: true,
     },
   },

@@ -55,9 +55,9 @@ router
   .route("/listings/search/autoparts")
   .get(catchAsync(userController.sendAllSearchedAutoParts));
 
-router
-  .route("/cars/brands/:id/models")
-  .get(isValidObjectId, catchAsync(userController.sendAllCarModels));
+router.route("/cars/brands/:id/models") /
+  autoparts /
+  cat.get(isValidObjectId, catchAsync(userController.sendAllCarModels));
 
 router
   .route("/autoparts/cat")
