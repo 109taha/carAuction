@@ -43,10 +43,7 @@ const bikeListingSchema = Joi.object({
     .unique()
     .external(validateFeatures),
 
-  location: Joi.string()
-    .pattern(/^[a-f\d]{24}$/i)
-    .required()
-    .external(validateLocation),
+  location: Joi.string().required(),
 
   brand: Joi.string()
     .pattern(/^[a-f\d]{24}$/i)
