@@ -291,7 +291,8 @@ module.exports.showCarListings = async (req, res, next) => {
   const listings =
     location == "all"
       ? await CarListing.find({
-          status: "active",
+          // status: "active",
+          type: "normal",
         })
           .sort({
             created_on: -1,
@@ -314,7 +315,8 @@ module.exports.showCarListings = async (req, res, next) => {
             path: "registration_city",
           })
       : await CarListing.find({
-          status: "active",
+          // status: "active",
+          type: "normal",
           location: location,
         })
           .sort({
@@ -423,7 +425,8 @@ module.exports.sendAllSearchedCars = async (req, res, next) => {
   }
 
   const listings = await CarListing.find({
-    status: "active",
+    // status: "active",
+    type: "normal",
     $and: [queries],
   })
     .sort({
@@ -539,7 +542,8 @@ module.exports.showCarListingsByBrandModel = async (req, res, next) => {
   const skipping = (pageNumber - 1) * 20;
 
   const listings = await CarListing.find({
-    status: "awaiting approval",
+    // status: "awaiting approval",
+    type: "normal",
     brand: brandId,
     model: modelId,
   })
@@ -577,7 +581,8 @@ module.exports.showNewCarListings = async (req, res, next) => {
   const listings =
     location == "all"
       ? await CarListing.find({
-          status: "active",
+          // status: "active",
+          type: "normal",
           condition: "new",
         })
           .sort({
@@ -601,7 +606,8 @@ module.exports.showNewCarListings = async (req, res, next) => {
             path: "registration_city",
           })
       : await CarListing.find({
-          status: "active",
+          // status: "active",
+          type: "normal",
           condition: "new",
           location: location,
         })
@@ -639,7 +645,8 @@ module.exports.showUsedCarListings = async (req, res, next) => {
   const listings =
     location == "all"
       ? await CarListing.find({
-          status: "active",
+          type: "normal",
+          // status: "active",
           condition: "used",
         })
           .sort({
@@ -663,7 +670,8 @@ module.exports.showUsedCarListings = async (req, res, next) => {
             path: "registration_city",
           })
       : await CarListing.find({
-          status: "active",
+          // status: "active",
+          type: "normal",
           condition: "used",
           location: location,
         })
@@ -695,14 +703,14 @@ module.exports.showUsedCarListings = async (req, res, next) => {
 };
 
 module.exports.showAccidentCarListings = async (req, res, next) => {
-  s;
   const pageNumber = Number(req.params.pageNumber);
   const location = req.params.location;
   const skipping = (pageNumber - 1) * 20;
   const listings =
     location == "all"
       ? await CarListing.find({
-          status: "active",
+          // status: "active",
+          type: "normal",
           condition: "accidental",
         })
           .sort({
@@ -720,7 +728,8 @@ module.exports.showAccidentCarListings = async (req, res, next) => {
             path: "model",
           })
       : await CarListing.find({
-          status: "active",
+          // status: "active",
+          type: "normal",
           condition: "accidental",
           location: location,
         })
@@ -752,7 +761,7 @@ module.exports.showBikeListings = async (req, res, next) => {
   const listings =
     location == "all"
       ? await BikeListing.find({
-          status: "active",
+          // status: "active",
         })
           .sort({
             created_on: -1,
@@ -1141,7 +1150,7 @@ module.exports.compareIndividualCar = async (req, res, next) => {
   const foundCarListing1 = await CarListing.findOneAndUpdate(
     {
       _id: carid1,
-      status: "active",
+      // status: "active",
     },
     {
       $inc: {
@@ -2765,4 +2774,66 @@ module.exports.savedCars = async (req, res) => {
     console.error(error);
     res.status(500).send("Internal Server Error: " + error.message);
   }
+};
+
+module.exports.showAuctionCarListings = async (req, res, next) => {
+  const pageNumber = Number(req.params.pageNumber);
+  const location = req.params.location;
+  const skipping = (pageNumber - 1) * 20;
+  const listings =
+    location == "all"
+      ? await CarListing.find({
+          // status: "active",
+          type: "auction",
+        })
+          .sort({
+            created_on: -1,
+          })
+          .skip(skipping)
+          .limit(20)
+          .populate({
+            path: "location",
+          })
+          .populate({
+            path: "features",
+          })
+          .populate({
+            path: "brand",
+          })
+          .populate({
+            path: "model",
+          })
+          .populate({
+            path: "registration_city",
+          })
+      : await CarListing.find({
+          // status: "active",
+          type: "auction",
+          location: location,
+        })
+          .sort({
+            created_on: -1,
+          })
+          .skip(skipping)
+          .limit(20)
+          .populate({
+            path: "location",
+          })
+          .populate({
+            path: "features",
+          })
+          .populate({
+            path: "brand",
+          })
+          .populate({
+            path: "model",
+          })
+          .populate({
+            path: "registration_city",
+          });
+
+  return res.json({
+    success: true,
+    data: listings,
+  });
 };

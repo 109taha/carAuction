@@ -314,4 +314,8 @@ router
     userController.savedCars
   );
 
+router
+  .route("/listings/car/auction/page/:pageNumber/:location")
+  .get(isValidPageNumber, catchAsync(userController.showAuctionCarListings));
+
 module.exports = router;
