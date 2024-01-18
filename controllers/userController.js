@@ -1170,7 +1170,11 @@ module.exports.compareIndividualCar = async (req, res, next) => {
     })
     .populate({
       path: "registration_city",
+    })
+    .populate({
+      path: "carSize",
     });
+
   if (!foundCarListing1)
     return res.status(400).json({
       success: false,
@@ -1378,6 +1382,9 @@ module.exports.getMyAds = async (req, res, next) => {
     })
     .populate({
       path: "registration_city",
+    })
+    .populate({
+      path: "carSize",
     });
 
   const bikeListing = await BikeListing.find({
