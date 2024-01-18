@@ -1356,15 +1356,55 @@ module.exports.getMyAds = async (req, res, next) => {
 
   const carListing = await CarListing.find({
     user: user._id,
-  }).sort({
-    created_on: -1,
-  });
+  })
+    .sort({
+      created_on: -1,
+    })
+    .populate({
+      path: "user",
+      select: "_id first_name last_name phone created_on",
+    })
+    .populate({
+      path: "features",
+    })
+    .populate({
+      path: "brand",
+    })
+    .populate({
+      path: "model",
+    })
+    .populate({
+      path: "location",
+    })
+    .populate({
+      path: "registration_city",
+    });
 
   const bikeListing = await BikeListing.find({
     user: user._id,
-  }).sort({
-    created_on: -1,
-  });
+  })
+    .sort({
+      created_on: -1,
+    })
+    .populate({
+      path: "user",
+      select: "_id first_name last_name phone created_on",
+    })
+    .populate({
+      path: "features",
+    })
+    .populate({
+      path: "brand",
+    })
+    .populate({
+      path: "model",
+    })
+    .populate({
+      path: "location",
+    })
+    .populate({
+      path: "registration_city",
+    });
 
   const autoPartListing = await AutoPartsListing.find({
     user: user._id,
@@ -1373,10 +1413,20 @@ module.exports.getMyAds = async (req, res, next) => {
       created_on: -1,
     })
     .populate({
+      path: "user",
+      select: "_id first_name last_name phone created_on",
+    })
+    .populate({
       path: "category",
     })
     .populate({
       path: "sub_category",
+    })
+    .populate({
+      path: "brand",
+    })
+    .populate({
+      path: "model",
     });
 
   return res.json({
@@ -2204,6 +2254,7 @@ module.exports.createBikeModel = async (req, res, next) => {
       const newModel = new BikeModel({
         ...validatedBody,
       });
+      await newModel.save();
       return res
         .status(200)
         .send({ success: true, message: "Bike Model Added", data: newModel });
