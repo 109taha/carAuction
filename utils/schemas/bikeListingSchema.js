@@ -57,10 +57,7 @@ const bikeListingSchema = Joi.object({
 
   model_year: Joi.number().min(1940).max(new Date().getFullYear()).required(),
 
-  registration_city: Joi.string()
-    .pattern(/^[a-f\d]{24}$/i)
-    .required()
-    .external(validateLocation),
+  registration_city: Joi.string().required(),
 
   condition: Joi.string().valid("new", "used").required(),
 

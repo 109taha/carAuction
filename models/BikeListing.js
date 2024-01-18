@@ -60,9 +60,7 @@ const BikeListingSchema = new Schema(
       max: 2150,
     },
     registration_city: {
-      type: Schema.Types.ObjectId,
-      ref: "City",
-      index: true,
+      type: String,
       required: true,
     },
     condition: {
