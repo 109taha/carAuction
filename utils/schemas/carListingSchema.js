@@ -104,6 +104,7 @@ const carListingSchema = Joi.object({
 
   features: Joi.array()
     .items(Joi.string().pattern(/^[a-f\d]{24}$/i))
+    .required()
     .unique()
     .external(validateFeatures),
 
