@@ -2298,7 +2298,7 @@ module.exports.sendBikeModel = async (req, res, next) => {
       .skip(skipping)
       .limit(20)
       .populate({
-        path: "CarBrand",
+        path: "brand",
       });
 
     return res.json({
