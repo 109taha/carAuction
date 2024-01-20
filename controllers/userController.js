@@ -2730,11 +2730,47 @@ module.exports.sendAllCarSize = async (req, res, next) => {
 module.exports.deleteCarListing = async (req, res) => {
   try {
     const listingId = req.params.id;
-    await CarListing.findByIdAndDelete(listingId);
-    return res.status(200).send({
-      success: true,
-      message: "Your Add has been deleted successfully",
-    });
+    const type = req.params.type;
+    console.log(typeof type);
+    if (type == "car") {
+      const car = await CarListing.findByIdAndDelete(listingId);
+      if (!car) {
+        return res.status(400).send({
+          success: false,
+          message: "No car found on that id",
+        });
+      }
+      return res.status(200).send({
+        success: true,
+        message: "Your Add has been deleted successfully",
+      });
+    }
+    if (type == "bike") {
+      const bike = await BikeListing.findByIdAndDelete(listingId);
+      if (!bike) {
+        return res.status(400).send({
+          success: false,
+          message: "No bike found on that id",
+        });
+      }
+      return res.status(200).send({
+        success: true,
+        message: "Your Add has been deleted successfully",
+      });
+    }
+    if (type == "autopart") {
+      const autopart = await AutoPartsListing.findByIdAndDelete(listingId);
+      if (!autopart) {
+        return res.status(400).send({
+          success: false,
+          message: "No auto part found on that id",
+        });
+      }
+      return res.status(200).send({
+        success: true,
+        message: "Your Add has been deleted successfully",
+      });
+    }
   } catch (error) {
     console.log(error);
     return res

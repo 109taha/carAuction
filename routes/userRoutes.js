@@ -304,7 +304,7 @@ router
 
 router.route("/cars/size").get(catchAsync(userController.sendAllCarSize));
 router
-  .route("/delete/car/:id")
+  .route("/delete/car/:id/type/:type")
   .delete(catchAsync(userController.deleteCarListing));
 
 router
