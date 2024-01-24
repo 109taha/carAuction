@@ -12,8 +12,7 @@ const CarListingSchema = new Schema(
   {
     addFor: {
       type: String,
-      required: true,
-      defualt: "Car",
+      // required: true,
     },
     type: {
       type: String,

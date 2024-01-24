@@ -1475,7 +1475,7 @@ module.exports.createNewCarListing = async (req, res, next) => {
 
   const imgObjs = [];
   let validatedBody;
-
+  const typeFor = "Car";
   // console.log("Body: ", body);
   // console.log("Files: ", files);
   try {
@@ -1521,6 +1521,7 @@ module.exports.createNewCarListing = async (req, res, next) => {
     user,
     ...validatedBody,
     images: imgObjs,
+    addFor: typeFor,
   });
   console.log(newListing);
   await newListing.save();
@@ -1682,7 +1683,7 @@ module.exports.createNewAutoPartListing = async (req, res, next) => {
   } catch (err) {
     return console.log(err);
   }
-
+  const addFor = "AutoPart";
   if (!files || files?.length < 1)
     return res.status(401).json({
       success: false,
@@ -1713,6 +1714,7 @@ module.exports.createNewAutoPartListing = async (req, res, next) => {
     user,
     ...validatedBody,
     images: imgObjs,
+    addFor,
   });
   try {
     await newListing.save();
@@ -1743,7 +1745,7 @@ module.exports.createNewBikeListing = async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-
+  const addFor = "Bike";
   if (!files || files?.length < 1)
     return res.status(401).json({
       success: false,
@@ -1774,6 +1776,7 @@ module.exports.createNewBikeListing = async (req, res, next) => {
     user,
     ...validatedBody,
     images: imgObjs,
+    addFor,
   });
 
   try {

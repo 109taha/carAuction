@@ -12,8 +12,6 @@ const BikeListingSchema = new Schema(
   {
     addFor: {
       type: String,
-      required: true,
-      defualt: "Bike",
     },
     user: {
       type: Schema.Types.ObjectId,

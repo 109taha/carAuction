@@ -7,8 +7,6 @@ const AutoPartListingSchema = new Schema(
   {
     addFor: {
       type: String,
-      required: true,
-      defualt: "AutoPart",
     },
     user: {
       type: Schema.Types.ObjectId,
