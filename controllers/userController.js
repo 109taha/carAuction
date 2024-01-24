@@ -2799,7 +2799,8 @@ module.exports.savedCars = async (req, res) => {
     const user = req.user;
     console.log(user);
     const carId = req.params.id;
-    const car = await AutoPartsListing.findById(carId);
+    const car = await CarListing.findById(carId);
+    console.log(car);
     if (!car) {
       return res
         .status(400)
@@ -2887,7 +2888,7 @@ module.exports.savedAutoPart = async (req, res) => {
     const user = req.user;
     console.log(user);
     const carId = req.params.id;
-    const car = await BikeListing.findById(carId);
+    const car = await AutoPartListing.findById(carId);
     if (!car) {
       return res
         .status(400)
