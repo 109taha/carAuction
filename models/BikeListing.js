@@ -10,6 +10,11 @@ const nanoid = customAlphabet(ALPHABET, 16);
 
 const BikeListingSchema = new Schema(
   {
+    addFor: {
+      type: String,
+      required: true,
+      defualt: "Bike",
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",

@@ -5,6 +5,11 @@ const MAX_IMAGES = 5;
 
 const AutoPartListingSchema = new Schema(
   {
+    addFor: {
+      type: String,
+      required: true,
+      defualt: "AutoPart",
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",

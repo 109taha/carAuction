@@ -10,6 +10,11 @@ const nanoid = customAlphabet(ALPHABET, 16);
 
 const CarListingSchema = new Schema(
   {
+    addFor: {
+      type: String,
+      required: true,
+      defualt: "Car",
+    },
     type: {
       type: String,
       require: true,
