@@ -313,12 +313,16 @@ router
     passport.authenticate("user", { session: false }),
     userController.savedCars
   );
+
 router
   .route("/saved/bike/:id")
   .get(
     passport.authenticate("user", { session: false }),
     userController.savedBike
   );
+
+router.route("/saved/:userId").get(userController.saveditem);
+
 router
   .route("/saved/autopart/:id")
   .get(

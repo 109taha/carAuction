@@ -2788,7 +2788,7 @@ module.exports.savedCars = async (req, res) => {
     if (!car) {
       return res
         .status(400)
-        .send({ success: false, message: "No autoPart found on that id" });
+        .send({ success: false, message: "No car found on that id" });
     }
     const userFromDB = await User.findById(user);
     if (!userFromDB) {
@@ -2835,7 +2835,9 @@ module.exports.savedBike = async (req, res) => {
     }
     const userFromDB = await User.findById(user);
     if (!userFromDB) {
-      return res.status(404).send("User not found");
+      return res
+        .status(404)
+        .send({ success: false, message: "User not found" });
     }
     if (userFromDB.savedBike.includes(carId)) {
       // return res.status(400).send("Blog already saved");
@@ -2874,7 +2876,7 @@ module.exports.savedAutoPart = async (req, res) => {
     if (!car) {
       return res
         .status(400)
-        .send({ success: false, message: "No bike found on that id" });
+        .send({ success: false, message: "No autoPart found on that id" });
     }
     const userFromDB = await User.findById(user);
     if (!userFromDB) {
@@ -2905,6 +2907,31 @@ module.exports.savedAutoPart = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error: " + error.message);
+  }
+};
+
+module.exports.saveditem = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId)
+      .populate("savedCars")
+      .populate("savedBike")
+      .populate("savedAutoPart")
+      .select("savedCars savedBike savedAutoPart");
+
+    if (!user) {
+      return res
+        .status(400)
+        .send({ success: false, message: "No user found on that Id" });
+    }
+
+    res.status(200).send({ success: true, data: user });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .send({ success: false, message: "Internal server error" });
   }
 };
 
