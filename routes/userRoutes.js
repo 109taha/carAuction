@@ -313,6 +313,18 @@ router
     passport.authenticate("user", { session: false }),
     userController.savedCars
   );
+router
+  .route("/saved/bike/:id")
+  .get(
+    passport.authenticate("user", { session: false }),
+    userController.savedBike
+  );
+router
+  .route("/saved/autopart/:id")
+  .get(
+    passport.authenticate("user", { session: false }),
+    userController.savedAutoPart
+  );
 
 router
   .route("/listings/car/auction/page/:pageNumber/:location")

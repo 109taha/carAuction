@@ -2784,7 +2784,12 @@ module.exports.savedCars = async (req, res) => {
     const user = req.user;
     console.log(user);
     const carId = req.params.id;
-
+    const car = await AutoPartsListing.findById(carId);
+    if (!car) {
+      return res
+        .status(400)
+        .send({ success: false, message: "No autoPart found on that id" });
+    }
     const userFromDB = await User.findById(user);
     if (!userFromDB) {
       return res.status(404).send("User not found");
@@ -2798,14 +2803,105 @@ module.exports.savedCars = async (req, res) => {
 
       await userFromDB.save();
 
-      return res.status(200).send("Blog unsaved successfully");
+      return res
+        .status(200)
+        .send({ success: true, message: "Car unsaved successfully" });
     }
 
     userFromDB.savedCars.push(carId);
 
     await userFromDB.save();
 
-    return res.status(200).send("Blog saved successfully");
+    // return res.status(200).send("Blog saved successfully");
+    return res
+      .status(200)
+      .send({ success: true, message: "Car saved successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error: " + error.message);
+  }
+};
+
+module.exports.savedBike = async (req, res) => {
+  try {
+    const user = req.user;
+    console.log(user);
+    const carId = req.params.id;
+    const car = await BikeListing.findById(carId);
+    if (!car) {
+      return res
+        .status(400)
+        .send({ success: false, message: "No bike found on that id" });
+    }
+    const userFromDB = await User.findById(user);
+    if (!userFromDB) {
+      return res.status(404).send("User not found");
+    }
+    if (userFromDB.savedBike.includes(carId)) {
+      // return res.status(400).send("Blog already saved");
+
+      userFromDB.savedBike = userFromDB.savedBike.filter(
+        (item) => item.toString() != carId
+      );
+
+      await userFromDB.save();
+
+      return res
+        .status(200)
+        .send({ success: true, message: "Bike unsaved successfully" });
+    }
+
+    userFromDB.savedBike.push(carId);
+
+    await userFromDB.save();
+
+    // return res.status(200).send("Blog saved successfully");
+    return res
+      .status(200)
+      .send({ success: true, message: "Bike saved successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error: " + error.message);
+  }
+};
+
+module.exports.savedAutoPart = async (req, res) => {
+  try {
+    const user = req.user;
+    console.log(user);
+    const carId = req.params.id;
+    const car = await BikeListing.findById(carId);
+    if (!car) {
+      return res
+        .status(400)
+        .send({ success: false, message: "No bike found on that id" });
+    }
+    const userFromDB = await User.findById(user);
+    if (!userFromDB) {
+      return res.status(404).send("User not found");
+    }
+    if (userFromDB.savedAutoPart.includes(carId)) {
+      // return res.status(400).send("Blog already saved");
+
+      userFromDB.savedAutoPart = userFromDB.savedAutoPart.filter(
+        (item) => item.toString() != carId
+      );
+
+      await userFromDB.save();
+
+      return res
+        .status(200)
+        .send({ success: true, message: " unsaved successfully" });
+    }
+
+    userFromDB.savedAutoPart.push(carId);
+
+    await userFromDB.save();
+
+    // return res.status(200).send("Blog saved successfully");
+    return res
+      .status(200)
+      .send({ success: true, message: " saved successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error: " + error.message);

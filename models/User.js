@@ -50,6 +50,18 @@ const UserSchema = new Schema(
         ref: "CarListing",
       },
     ],
+    savedBike: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "BikeListing",
+      },
+    ],
+    savedAutoPart: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "AutoPartListing",
+      },
+    ],
   },
   {
     timestamps: {
