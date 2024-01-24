@@ -2056,6 +2056,12 @@ module.exports.updateCarListing = async (req, res, next) => {
     }
 
     const {
+      bidding_starting_price,
+      current_bidding,
+      bidding_difference,
+      selling_price,
+      bidding_starting_date,
+      bidding_ending_date,
       title,
       description,
       features,
@@ -2073,12 +2079,14 @@ module.exports.updateCarListing = async (req, res, next) => {
       battery_capacity,
       transmission_type,
       assembly,
+      type,
     } = req.body;
 
     const car = await CarListing.findById(carId);
     if (!car) {
       return res.status(400).send({ message: "we can not find your car" });
     }
+    car.type = type || car.type;
     car.title = title || car.title;
     car.description = description || car.description;
     car.features = features || car.features;
@@ -2096,7 +2104,14 @@ module.exports.updateCarListing = async (req, res, next) => {
     car.battery_capacity = battery_capacity || car.battery_capacity;
     car.transmission_type = transmission_type || car.transmission_type;
     car.assembly = assembly || car.assembly;
-    car.transmission_type = transmission_type || car.transmission_type;
+    car.bidding_starting_price =
+      bidding_starting_price || car.bidding_starting_price;
+    car.current_bidding = current_bidding || car.current_bidding;
+    car.bidding_difference = bidding_difference || car.bidding_difference;
+    car.selling_price = selling_price || car.selling_price;
+    car.bidding_starting_date =
+      bidding_starting_date || car.bidding_starting_date;
+    car.bidding_ending_date = bidding_ending_date || car.bidding_ending_date;
 
     if (imgObjs?.length > 0) {
       car.images = [...imgObjs];
