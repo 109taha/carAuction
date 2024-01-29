@@ -457,7 +457,7 @@ module.exports.sendAllSearchedCars = async (req, res, next) => {
 
 module.exports.showAutoPartListings = async (req, res, next) => {
   const listings = await AutoPartsListing.find({
-    status: "active",
+    // status: "active",
   })
     .sort({
       created_on: -1,
