@@ -2620,8 +2620,31 @@ module.exports.createCarFeature = async (req, res, next) => {
     const body = req.body;
 
     let validatedBody;
+    const imgObjs = [];
+    const files = req.files;
 
-    console.log("Body: ", body);
+    if (files || files?.length > 0) {
+      for (const file of files) {
+        const { path } = file;
+        try {
+          const result = await cloudinary.uploader.upload(path, {
+            folder: "pak-auto",
+          });
+          imgObjs.push({
+            url: result.secure_url,
+            public_id: result.public_id,
+          });
+          fs.unlinkSync(path);
+        } catch (err) {
+          if (imgObjs?.length) {
+            const imgs = imgObjs.map((obj) => obj.public_id);
+            cloudinary.api.delete_resources(imgs);
+          }
+          return console.log(err);
+        }
+      }
+    }
+    console.log(imgObjs[0].url);
 
     try {
       validatedBody = await featureCarSchema.validateAsync(body, {
@@ -2641,6 +2664,7 @@ module.exports.createCarFeature = async (req, res, next) => {
 
     const newListing = new CarFeature({
       name: name,
+      images: imgObjs[0].url,
     });
 
     await newListing.save();
@@ -2891,7 +2915,7 @@ module.exports.savedAutoPart = async (req, res) => {
     const user = req.user;
     console.log(user);
     const carId = req.params.id;
-    const car = await AutoPartListing.findById(carId);
+    const car = await AutoPartsListing.findById(carId);
     if (!car) {
       return res
         .status(400)
