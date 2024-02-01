@@ -364,6 +364,7 @@ module.exports.sendAllSearchedCars = async (req, res, next) => {
     pricelt,
     pricegt,
     body_color,
+    carSize,
   } = req.query;
   const queries = Object.fromEntries(
     Object.entries({
@@ -383,6 +384,7 @@ module.exports.sendAllSearchedCars = async (req, res, next) => {
       pricelt,
       pricegt,
       body_color,
+      carSize,
     }).filter(([_, v]) => v != null && v != "" && v != undefined)
   );
 
@@ -456,9 +458,10 @@ module.exports.sendAllSearchedCars = async (req, res, next) => {
 };
 
 module.exports.showAutoPartListings = async (req, res, next) => {
-  const listings = await AutoPartsListing.find({
+  const listings = await AutoPartsListing
+    .find
     // status: "active",
-  })
+    ()
     .sort({
       created_on: -1,
     })
@@ -784,7 +787,7 @@ module.exports.showBikeListings = async (req, res, next) => {
             path: "registration_city",
           })
       : await BikeListing.find({
-          status: "active",
+          // status: "active",
           location: location,
         })
           .sort({
