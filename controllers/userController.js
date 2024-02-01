@@ -419,6 +419,12 @@ module.exports.sendAllSearchedCars = async (req, res, next) => {
     queries.features = {};
     queries.features.$in = features;
   }
+  if (queries.brand) {
+    let brand = queries.brand.split("-");
+    delete queries.brand;
+    queries.brand = {};
+    queries.brand.$in = brand;
+  }
   if (queries.distance_driven) {
     queries.distance_driven = { $lte: parseInt(queries.distance_driven) };
   }
