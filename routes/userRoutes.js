@@ -254,6 +254,9 @@ router.route("/car/model/:pageNumber").get(userController.sendCarModel);
 router
   .route("/car/model/:pageNumber/:brandId")
   .get(userController.sendCarByBrandModel);
+router
+  .route("/bike/model/:pageNumber/:brandId")
+  .get(userController.sendBikeByBrandModel);
 
 router
   .route("/new/car/brand")

@@ -2429,6 +2429,35 @@ module.exports.sendCarByBrandModel = async (req, res, next) => {
   }
 };
 
+module.exports.sendBikeByBrandModel = async (req, res, next) => {
+  try {
+    const pageNumber = Number(req.params.pageNumber);
+    const skipping = (pageNumber - 1) * 20;
+    console.log(req.params.barandId);
+
+    const allModel = await BikeModel.find({ brand: req.params.brandId })
+      .sort({
+        created_on: -1,
+      })
+      .skip(skipping)
+      .limit(20)
+      .populate({
+        path: "brand",
+      });
+    console.log(allModel);
+    return res.json({
+      success: true,
+      data: allModel,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports.createCarBrand = async (req, res, next) => {
   try {
     const { body, files } = req;
