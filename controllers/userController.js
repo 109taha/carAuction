@@ -1694,7 +1694,7 @@ module.exports.createNewAutoPartListing = async (req, res, next) => {
       abortEarly: false,
     });
   } catch (err) {
-    return console.log(err);
+    return next(err);
   }
   const addFor = "AutoPart";
   if (!files || files?.length < 1)
